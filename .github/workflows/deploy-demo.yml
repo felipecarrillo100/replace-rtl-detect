@@ -6,13 +6,11 @@ on:
       - main
       - master
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -22,19 +20,30 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
       - name: Set up Node
-        uses: actions/setup-node@v4.2.0
+        uses: actions/setup-node@v4
         with:
-          node-version: 22 # 👈 Upgraded to 22 to prevent Node 20 engine deprecation
+          node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci --include=optional # 👈 Uses clean install to properly download native Linux binaries
+      # Prevent Rollup optional native dependency issues on Linux
+      - name: Clean install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
+
+      # Explicit fallback for Rollup Linux binary
+      - name: Ensure Rollup Linux binary exists
+        run: |
+          npm install @rollup/rollup-linux-x64-gnu --save-dev
 
       - name: Build Library
         run: npm run build
@@ -43,12 +52,12 @@ jobs:
         run: npm run build:demo
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5 # 👈 Bumped to v5 to clear Action runtime warnings
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist-demo'
+          path: ./dist-demo
 
       - name: Deploy to GitHub Pages
         id: deployment
