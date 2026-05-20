@@ -34,7 +34,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci # 👈 Uses clean install to properly download native Linux binaries
+        run: npm ci --include=optional # 👈 Uses clean install to properly download native Linux binaries
 
       - name: Build Library
         run: npm run build
