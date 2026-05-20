@@ -1,15 +1,25 @@
 import { isRtlLang, getLangDir } from '../src/index';
 
 const PRESETS = [
+  // ── RTL languages ──────────────────────────────────────────────────────────
   { name: 'Arabic (ar-EG)', code: 'ar-EG', sample: 'العربية هي لغة تُكتب من اليمين إلى اليسار ولها تاريخ عريق.' },
   { name: 'Hebrew (he-IL)', code: 'he-IL', sample: 'עברית היא שפה שמית הנכתבת מימין לשמאל.' },
   { name: 'Persian (fa)', code: 'fa', sample: 'فارسی یک زبان هندواروپایی است که با خط عربی نوشته می‌شود.' },
+  { name: 'Urdu (ur)', code: 'ur', sample: 'اردو ایک جنوبی ایشیائی زبان ہے جو دائیں سے بائیں لکھی جاتی ہے۔' },
   { name: 'Kurdish (ku-Arab)', code: 'ku-Arab', sample: 'کوردیی ناوەندی یان سۆرانی بە ڕێنووسی عەرەبی دەنووسرێت.' },
+  // ── Historic / minority RTL (bug-discovery locales) ────────────────────────
+  { name: 'Kurdish base (ku) ⚡', code: 'ku', sample: 'Kurdî zimanek îranî ye ku bi alfabeyên cuda tê nivîsandin.' },
+  { name: 'Avestan (ae) ⚡', code: 'ae', sample: 'Avestan is an ancient Iranian language written right-to-left.' },
+  { name: 'Aramaic (arc) ⚡', code: 'arc', sample: 'Aramaic is a Semitic language historically written right-to-left.' },
+  // ── Multi-script (LTR vs RTL depending on script) ──────────────────────────
   { name: 'Kurdish (ku-Latn)', code: 'ku-Latn', sample: 'Kurdî bi alfabeya Hawarê ya bi tîpên Latînî tê nivîsandin.' },
   { name: 'Azerbaijani (az-Arab)', code: 'az-Arab', sample: 'آذربایجان دیلی ایراندا عرب الیفباسی ایله یازیلیر.' },
   { name: 'Azerbaijani (az-Latn)', code: 'az-Latn', sample: 'Azərbaycan dili Latın qrafikalı əlifba ilə yazılır.' },
+  // ── LTR languages ──────────────────────────────────────────────────────────
   { name: 'English (en-US)', code: 'en-US', sample: 'This is an example text written left-to-right in the Latin script.' },
-  { name: 'Spanish (es-ES)', code: 'es-ES', sample: 'Este es un texto de ejemplo escrito de izquierda a derecha en español.' }
+  { name: 'Spanish (es-ES)', code: 'es-ES', sample: 'Este es un texto de ejemplo escrito de izquierda a derecha en español.' },
+  { name: 'Russian (ru)', code: 'ru', sample: 'Русский язык пишется слева направо с использованием кириллического алфавита.' },
+  { name: 'Chinese (zh-CN)', code: 'zh-CN', sample: '中文是从左到右书写的，使用汉字书写系统。' },
 ];
 
 const localeInput = document.getElementById('locale-input') as HTMLInputElement;

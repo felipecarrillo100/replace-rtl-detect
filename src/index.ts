@@ -42,22 +42,32 @@ export function isRtlLang(strLocale?: string | null): boolean | undefined {
         const locale = new Intl.Locale(cleanLocale.replace('_', '-'));
         const maximized = locale.maximize();
 
-        // 1. If script is explicitly RTL, return true
+        // 1. If an explicit script subtag was provided in the original locale string,
+        //    use it for definitive direction — RTL_SCRIPTS wins, else treat as LTR.
+        if (locale.script) {
+            return RTL_SCRIPTS.has(locale.script);
+        }
+
+        // 2. If maximizing resolved a clear RTL script (e.g. ar → Arab), return true.
         if (maximized.script && RTL_SCRIPTS.has(maximized.script)) {
             return true;
         }
 
-        // 2. Check direction via native Intl API if available
-        // Modern browsers/Node use getTextInfo().direction. Some earlier versions used textInfo.direction.
+        // 3. Check known RTL base languages before falling through to native API,
+        //    because getTextInfo() may return 'ltr' for historic/minority RTL languages
+        //    (e.g. ae, arc) that CLDR maps to Latin by default.
+        const baseLang = maximized.language || locale.language;
+        if (RTL_LANGS.has(baseLang)) {
+            return true;
+        }
+
+        // 4. Check direction via native Intl API if available (catches any remaining cases)
         const direction = (locale as any).getTextInfo?.().direction || (locale as any).textInfo?.direction;
         if (direction === 'rtl') {
             return true;
-        } else if (direction === 'ltr') {
-            return false;
         }
 
-        // 3. Fallback to base language code check
-        return RTL_LANGS.has(maximized.language || locale.language);
+        return false;
     } catch (e) {
         // RangeError or other issues parsing locale
         return undefined;

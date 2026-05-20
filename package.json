@@ -1,6 +1,7 @@
 {
   "name": "replace-rtl-detect",
   "version": "1.0.0",
+  "engines": { "node": ">=18" },
   "description": "A modern 2026 library to detect if the locale is right-to-left language.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
