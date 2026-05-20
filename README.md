@@ -8,6 +8,8 @@
 
 A modernized, drop-in replacement for the original `rtl-detect` library. Rebuilt from scratch in TypeScript using native browser/runtime internationalization (`Intl.Locale`) capabilities to provide accurate, secure, and future-proof text direction detection.
 
+🚀 **[Try the live demo on GitHub Pages](https://felipecarrillo100.github.io/replace-rtl-detect/)**
+
 ---
 
 ## Why Modernize? (Engineering Rationale)
@@ -108,7 +110,7 @@ Gets the writing direction for the given locale.
 
 ## Interactive Demo
 
-You can run and test the library locally using the interactive web demo:
+Run it locally:
 
 1. Clone this repository.
 2. Install development dependencies: `npm install`
