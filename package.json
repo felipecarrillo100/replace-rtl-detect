@@ -1,0 +1,56 @@
+{
+  "name": "replace-rtl-detect",
+  "version": "1.0.0",
+  "description": "A modern 2026 library to detect if the locale is right-to-left language.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo": "vite",
+    "build:demo": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipecarrillo100/replace-rtl-detect.git"
+  },
+  "keywords": [
+    "rtl-detect",
+    "locale direction",
+    "locale dir",
+    "locale",
+    "intl direction",
+    "intl dir",
+    "intl",
+    "right-to-left",
+    "left-to-right",
+    "rtl",
+    "ltr",
+    "intl-lang"
+  ],
+  "author": "Felipe Carrillo",
+  "license": "MIT",
+  "homepage": "https://github.com/felipecarrillo100/replace-rtl-detect#readme",
+  "bugs": {
+    "url": "https://github.com/felipecarrillo100/replace-rtl-detect/issues"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.13",
+    "vitest": "^4.1.7"
+  }
+}

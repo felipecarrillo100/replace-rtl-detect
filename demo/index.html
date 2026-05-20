@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>replace-rtl-detect Interactive Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 50%, #1a1b2f 0%, #0d0e15 100%);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.15);
+      --rtl-color: #10b981;
+      --rtl-glow: rgba(16, 185, 129, 0.2);
+      --ltr-color: #3b82f6;
+      --ltr-glow: rgba(59, 130, 246, 0.2);
+      --font-outfit: 'Outfit', sans-serif;
+      --font-inter: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: var(--font-inter);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      z-index: 10;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-outfit);
+      font-size: 2.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: -150px;
+      width: 300px;
+      height: 300px;
+      background: var(--primary-glow);
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .input-group {
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-outfit);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      font-family: var(--font-inter);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .preset-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .preset-btn.active {
+      background: var(--primary-glow);
+      color: #c7d2fe;
+      border-color: var(--primary);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .result-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .result-value {
+      font-family: var(--font-outfit);
+      font-size: 2.25rem;
+      font-weight: 800;
+    }
+
+    .badge-rtl {
+      color: var(--rtl-color);
+      text-shadow: 0 0 15px var(--rtl-glow);
+    }
+
+    .badge-ltr {
+      color: var(--ltr-color);
+      text-shadow: 0 0 15px var(--ltr-glow);
+    }
+
+    .meta-list {
+      text-align: left;
+      margin-top: 0.5rem;
+    }
+
+    .meta-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .meta-item:last-child {
+      border-bottom: none;
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+    }
+
+    .meta-val {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .preview-box {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.5rem;
+    }
+
+    .preview-indicator {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .preview-text {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      min-height: 80px;
+      transition: direction 0.3s ease;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>replace-rtl-detect</h1>
+      <div class="subtitle">Modern, native-first locale directionality detection</div>
+    </header>
+
+    <main class="card">
+      <div class="input-group">
+        <label for="locale-input">Enter Locale String</label>
+        <div class="input-wrapper">
+          <input type="text" id="locale-input" placeholder="e.g. ar-EG, en-US, ku-Latn, az-Arab" value="ar-EG" autocomplete="off">
+        </div>
+        <div class="presets" id="presets-container">
+          <!-- Preset buttons will be generated by JS -->
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-title">Is RTL?</div>
+          <div class="result-value" id="rtl-status">--</div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-title">Writing Direction</div>
+          <div class="result-value" id="dir-status">--</div>
+        </div>
+      </div>
+
+      <div class="result-card" style="margin-bottom: 2rem;">
+        <div class="result-title" style="text-align: left;">Parsed Locale Metadata (Intl.Locale)</div>
+        <div class="meta-list">
+          <div class="meta-item">
+            <span class="meta-label">Language Code</span>
+            <span class="meta-val" id="meta-lang">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Script Subtag</span>
+            <span class="meta-val" id="meta-script">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Region/Country</span>
+            <span class="meta-val" id="meta-region">--</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Maximized Locale</span>
+            <span class="meta-val" id="meta-maximized">--</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-header">
+          <label style="margin-bottom: 0;">Directional Preview</label>
+          <span class="preview-indicator" id="preview-indicator">DIR: RTL</span>
+        </div>
+        <div class="preview-text" id="preview-text" dir="rtl">
+          <!-- Sample text will be updated here -->
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      Modernized 2026 Edition &bull; Original by Shadi Abu Hilal &bull; Rebuilt with TypeScript
+    </footer>
+  </div>
+
+  <script type="module" src="/demo.ts"></script>
+</body>
+</html>
